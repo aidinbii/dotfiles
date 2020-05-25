@@ -11,6 +11,7 @@ alias l='ls -a'
 alias c='clear'
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME' 
 
+export EDITOR=/usr/bin/vim
 
 export RSTUDIO_PANDOC=/usr/lib/rstudio/bin/pandoc
 
