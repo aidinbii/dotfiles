@@ -9,10 +9,12 @@ alias root_user='sudo -s'
 alias bw_u='bw unlock --raw'
 alias l='ls -a'
 alias c='clear'
+alias ..='cd ..'
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME' 
 
 export EDITOR=/usr/bin/vim
-
+export VISUAL=vim
+export HISTCONTROL=ignoreboth
 export RSTUDIO_PANDOC=/usr/lib/rstudio/bin/pandoc
 
 colors() {
