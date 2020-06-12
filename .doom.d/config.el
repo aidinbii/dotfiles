@@ -1,7 +1,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Aidin Biibosunov"
@@ -19,10 +18,15 @@
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15))
 
+;;(setq doom-unicode-font (font-spec :name "SF-Pro-Display-Regular" :size 15))
+
+(setq doom-big-font (font-spec :family "Source Code Pro" :size 32))
+
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-nord-light)
+;;doom-one-light
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -144,14 +148,14 @@ See `org-capture-templates' for more information."
   (after-init . org-roam-mode)
   :custom
   (org-roam-directory "~/Documents/notes/")
-  :bind (:map org-roam-mode-map
-         (("C-c n l" . org-roam)
-          ("C-c n f" . org-roam-find-file)
-          ("C-c n j" . org-roam-jump-to-index)
-          ("C-c n b" . org-roam-switch-to-buffer)
-          ("C-c n g" . org-roam-graph))
-         :map org-mode-map
-         (("C-c n i" . org-roam-insert))))
+  :config
+  (setq org-roam-link-title-format "R:%s")
+  (setq org-roam-index-file "~/index.org")
+  (setq org-roam-buffer-width 0.3)
+  :bind (:map org-mode-map
+         (("C-c n i" . org-roam-insert))
+         :map org-roam-mode-map
+          (("C-c n j" . org-roam-jump-to-index))))
 
 
 
