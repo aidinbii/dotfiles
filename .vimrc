@@ -11,6 +11,7 @@ set expandtab
 
 " Show line numbers
 set number
+set relativenumber
 
 " Highlight matching pairs of brackets. Use the '%' character to jump between them.
 set matchpairs+=<:>
@@ -31,5 +32,5 @@ set autoindent
 
 set nobackup
 
-
+set clipboard=unnamedplus
 

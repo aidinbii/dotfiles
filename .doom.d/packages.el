@@ -54,3 +54,5 @@
 (package! deft)
 (package! aggressive-indent)
 (package! company-org-roam)
+(package! jupyter)
+(package! org-noter)

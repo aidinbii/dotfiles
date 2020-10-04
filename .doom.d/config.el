@@ -20,7 +20,7 @@
 
 ;;(setq doom-unicode-font (font-spec :name "SF-Pro-Display-Regular" :size 15))
 
-(setq doom-big-font (font-spec :family "Source Code Pro" :size 32))
+;;(setq doom-big-font (font-spec :family "Source Code Pro" :size 32))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -30,11 +30,13 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/org/"
+      org-download-dir "~/org/org_download/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
+
 
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -106,10 +108,14 @@ See `org-capture-templates' for more information."
 
 
 ;;auto-indent
-(use-package aggressive-indent
-   :hook ((java-mode . aggressive-indent-mode)))
-  ;;(python-mode . aggressive-indent-mode)
+(use-package! aggressive-indent
+   :hook ((java-mode . aggressive-indent-mode)
+  (python-mode . aggressive-indent-mode)))
   ;;:custom (aggressive-indent-comments-to))
+
+
+;;keep the indentation well structured
+(setq org-startup-indented t)
 
 
 ;;Re-display parts of the Emacs buffer as pretty Unicode symbols.
@@ -128,6 +134,36 @@ See `org-capture-templates' for more information."
 
 ;;Makes lines wrap at word boundaries.
 (global-visual-line-mode t)
+
+
+;;ranger
+(setq ranger-max-preview-size 20)
+(setq ranger-dont-show-binary t)
+(setq ranger-show-hidden t)
+
+
+;;Don’t ask before evaluating code blocks.
+(setq org-confirm-babel-evaluate nil)
+
+;;Allow babel to evaluate Emacs lisp, Ruby, dot, or Gnuplot code.
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (latex . t)
+   (org . t)
+   (dot . t)
+   (python . t)
+   (gnuplot . t)
+   (jupyter . t)))
+
+(setq org-babel-default-header-args:jupyter-python
+    '((:session . "py")
+    (:async . "yes")
+    (:kernel . "python3")))
+
+
+;;Don’t ask before evaluating code blocks.
+(setq org-confirm-babel-evaluate nil)
 
 ;;deft
 (use-package deft
@@ -152,10 +188,27 @@ See `org-capture-templates' for more information."
   (setq org-roam-link-title-format "R:%s")
   (setq org-roam-index-file "~/index.org")
   (setq org-roam-buffer-width 0.3)
+  (setq org-roam-capture-templates
+'(
+  ("f" "fleeting note" plain (function org-roam-capture--get-point)
+         "%?"
+         :file-name "fleetingNotes/${slug}"
+         :head "#+title: ${title}\n#+roam_key:\n#+roam_tags: \n\n")
+
+("l" "literature note" plain (function org-roam-capture--get-point)
+         "%?"
+         :file-name "projects/${slug}"
+         :head "#+title: ${title}\n#+roam_key:\n#+roam_tags: \n\n")
+
+  ))
+
+
+
+
   :bind (:map org-mode-map
          (("C-c n i" . org-roam-insert))
          :map org-roam-mode-map
-          (("C-c n j" . org-roam-jump-to-index))))
+         (("C-c n j" . org-roam-jump-to-index))))
 
 
 
