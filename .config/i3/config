@@ -11,7 +11,7 @@
 set $mod Mod4
 
 # Wallpaper
-exec_always feh --bg-scale /home/aidin/.config/i3/wallpapers/121471.jpg
+exec_always feh --bg-scale /home/aidin/.config/i3/wallpapers/96368.jpg
 
 # Remap caps-lock to cntrl+escape
 exec_always setxkbmap -option caps:swapescape
@@ -46,7 +46,7 @@ exec_always --no-startup-id bash ~/.config/i3/polybar/launchi3.sh
 exec --no-startup-id picom -bc
 exec --no-startup-id clipit
 exec_always --no-startup-id redshift
-
+# exec_always --no-startup-id dunst -config /home/aidin/.config/dunst/dunstrc
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -182,7 +182,7 @@ set $ws5 "5:Misc"
 set $ws6 "6:Telegram + Slack"
 set $ws7 "7"
 set $ws8 "8"
-set $ws9 "9" 
+set $ws9 "9"
 
 
 # Start applications on specific workspaces

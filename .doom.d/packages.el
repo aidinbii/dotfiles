@@ -56,3 +56,7 @@
 (package! company-org-roam)
 (package! jupyter)
 (package! org-noter)
+(package! mixed-pitch)
+(package! modus-operandi-theme)
+(package! modus-vivendi-theme)
+(package! super-save)

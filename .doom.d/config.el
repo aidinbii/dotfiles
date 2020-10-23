@@ -1,7 +1,5 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
+ ;;configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Aidin Biibosunov"
       user-mail-address "biibosunov.aidin@gmail.com")
@@ -16,7 +14,12 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15))
+(setq doom-font (font-spec :family "SF Mono" :style "Regular" :size 15)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 36)
+      doom-fixed-pitch-font (font-spec :family "SF Mono" :style "Regular" :size 15)
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size 13))
+      ;; doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'light))
+
 
 ;;(setq doom-unicode-font (font-spec :name "SF-Pro-Display-Regular" :size 15))
 
@@ -25,7 +28,9 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord-light)
+;; (setq doom-theme 'modus-vivendi)
+;; doom-nord
+;; doom-nord-light
 ;;doom-one-light
 
 ;; If you use `org' and don't want your org files in the default location below,
@@ -52,9 +57,27 @@
 ;; To get information about any of these functions/macros, move the cursor over
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
 ;; This will open documentation for it, including demos of how they are used.
-;;
+
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
+
+
+;; Modus theme https://protesilaos.com/modus-themes/#h:defcf4fc-8fa8-4c29-b12e-7119582cc929
+(use-package modus-operandi-theme
+:config
+(setq modus-operandi-theme-slanted-constructs t)
+(setq modus-operandi-theme-fringes 'intense)
+(setq modus-operandi-theme-org-blocks 'greyscale)
+(setq modus-operandi-theme-scale-headings t)
+(load-theme 'modus-operandi t))
+
+;; (use-package modus-vivendi-theme
+;; :config
+;; (setq modus-vivendi-theme-slanted-constructs t)
+;; (setq modus-vivendi-theme-fringes 'intense)
+;; (setq modus-vivendi-theme-org-blocks 'greyscale)
+;; (setq modus-vivendi-theme-scale-headings t)
+;; (load-theme 'modus-vivendi t))
 
 ;; org capture
 (require 'org-capture)
@@ -62,15 +85,24 @@
 (setq org-default-notes-file (concat org-directory "~/Documents/notes/org-capture/notes.org"))
 
 (setq org-capture-templates
-      '(
-        ("j" "Journal" entry
-         (file+datetree "~/Documents/notes/org-capture/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")
+    `(("i" "Inbox")
+      ("ii" "inbox" entry (file+olp "~/Dropbox/orgzly/inbox.org" "Inbox")
+           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+      ("im" "Meeting" entry
+           (file+olp+datetree "~/Dropbox/orgzly/inbox.org" "Meetings")
+           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+           :clock-in :clock-resume
+           :empty-lines 1)
 
-        ("z" "Zettelkasten" entry
-         (file+headline "~/Documents/notes/org-capture/zettelkasten.org" "Zettelkasten")
-         "* %^{Write the title here} \n IDEA: %? \n LINKS: %a \n Written on %U\n ")
-        ))
+      ("j" "Journal" entry
+           (file+olp+datetree "~/Dropbox/orgzly/journal.org")
+           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+           :clock-in :clock-resume
+           :empty-lines 1)
+
+      ("e" "Checking Email" entry (file+olp+datetree "~/Dropbox/orgzly/inbox.org" "Email" )
+       "* Checking Email :email:\n\n%? \n%a" :clock-in :clock-resume :empty-lines 1)))
 
 
 
@@ -104,7 +136,19 @@ See `org-capture-templates' for more information."
 
 
 
+;; minor mode that enables mixing fixed-pitch
+(use-package mixed-pitch
+  :hook
+  ;; If you want it in all text modes:
+  (text-mode . mixed-pitch-mode))
 
+
+(use-package super-save
+  :config
+  (super-save-mode +1)
+  (setq super-save-remote-files nil)
+  (setq super-save-exclude '(".gpg"))
+        )
 
 
 ;;auto-indent
@@ -188,22 +232,25 @@ See `org-capture-templates' for more information."
   (setq org-roam-link-title-format "R:%s")
   (setq org-roam-index-file "~/index.org")
   (setq org-roam-buffer-width 0.3)
+  (setq org-roam-completion-system 'default)
   (setq org-roam-capture-templates
-'(
-  ("f" "fleeting note" plain (function org-roam-capture--get-point)
-         "%?"
-         :file-name "fleetingNotes/${slug}"
-         :head "#+title: ${title}\n#+roam_key:\n#+roam_tags: \n\n")
+        '(
+          ("d" "default" plain (function org-roam-capture--get-point)
+         :file-name "${slug}"
+         :head "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n#+roam_tags: \"default note\" \n#+roam_key: %? \n\n"
+         :unnarrowed t)
 
-("l" "literature note" plain (function org-roam-capture--get-point)
-         "%?"
+          ("p" "publish zettel" plain (function org-roam-capture--get-point)
+         :file-name "to_publish/${slug}"
+         :head "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n#+roam_tags: \"public\" \n#+roam_key: %? \n\n"
+         :unnarrowed t)
+
+          ("l" "literature note" plain (function org-roam-capture--get-point)
          :file-name "projects/${slug}"
-         :head "#+title: ${title}\n#+roam_key:\n#+roam_tags: \n\n")
+         :head "#+title: ${title}\n#+CREATED: %U\n#+LAST_MODIFIED: %U\n#+roam_tags: \"project\" %? \n#+roam_key: \n\n"
+         :unnarrowed t)
 
-  ))
-
-
-
+          ))
 
   :bind (:map org-mode-map
          (("C-c n i" . org-roam-insert))
