@@ -45,7 +45,7 @@ exec_always --no-startup-id bash ~/.config/i3/polybar/launchi3.sh
 #exec --no-startup-id picom --config ~/.config/i3/picom/picom.conf
 exec --no-startup-id picom -bc
 exec --no-startup-id clipit
-exec_always --no-startup-id redshift
+# exec_always --no-startup-id redshift
 # exec_always --no-startup-id dunst -config /home/aidin/.config/dunst/dunstrc
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
@@ -130,10 +130,10 @@ bindsym $mod+l focus right
 #bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left

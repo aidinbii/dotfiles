@@ -60,3 +60,11 @@
 (package! modus-operandi-theme)
 (package! modus-vivendi-theme)
 (package! super-save)
+(package! company-lsp)
+(package! company-posframe)
+(package! golden-ratio)
+(package! zoom-window)
+(package! zoom)
+(package! ox-reveal)
+(package! ox-ipynb
+  :recipe (:host github :repo "jkitchin/ox-ipynb"))

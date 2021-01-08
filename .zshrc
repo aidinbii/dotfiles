@@ -104,6 +104,7 @@ alias l='ls -a'
 alias c='clear'
 alias ..='cd ..'
 alias config='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
+alias pass='PASSWORD_STORE_ENABLE_EXTENSIONS=true pass'
 
 setopt HIST_SAVE_NO_DUPS # Do not write a duplicat event to the history file.#   
 

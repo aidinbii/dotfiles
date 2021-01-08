@@ -14,10 +14,11 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "SF Mono" :style "Regular" :size 15)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 36)
-      doom-fixed-pitch-font (font-spec :family "SF Mono" :style "Regular" :size 15)
-      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size 13))
+(setq doom-font (font-spec :family "SF Mono" :style "Regular" :size 16)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20)
+      ;; doom-fixed-pitch-font (font-spec :family "SF Mono" :style "Regular" :size 15)
+      ;; doom-variable-pitch-font (font-spec :family "DejaVu Sans" :style "Book" :size 16))
+      doom-variable-pitch-font (font-spec :family "SF Pro Text" :style "Regular" :size 16))
       ;; doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'light))
 
 
@@ -66,7 +67,6 @@
 (use-package modus-operandi-theme
 :config
 (setq modus-operandi-theme-slanted-constructs t)
-(setq modus-operandi-theme-fringes 'intense)
 (setq modus-operandi-theme-org-blocks 'greyscale)
 (setq modus-operandi-theme-scale-headings t)
 (load-theme 'modus-operandi t))
@@ -74,13 +74,27 @@
 ;; (use-package modus-vivendi-theme
 ;; :config
 ;; (setq modus-vivendi-theme-slanted-constructs t)
-;; (setq modus-vivendi-theme-fringes 'intense)
 ;; (setq modus-vivendi-theme-org-blocks 'greyscale)
 ;; (setq modus-vivendi-theme-scale-headings t)
 ;; (load-theme 'modus-vivendi t))
 
+
+(setq org-hide-emphasis-markers t)
+(setq org-ellipsis "⤵")
+
+;; zoom window
+(custom-set-variables
+ '(zoom-mode t))
+
+(custom-set-variables
+ '(zoom-size '(0.618 . 0.618)))
+
+
 ;; org capture
 (require 'org-capture)
+
+;; (setq org-agenda-files '("~/Dropbox/orgzly"))
+(setq org-agenda-files (list "~/Dropbox/orgzly"))
 
 (setq org-default-notes-file (concat org-directory "~/Documents/notes/org-capture/notes.org"))
 
@@ -105,6 +119,10 @@
        "* Checking Email :email:\n\n%? \n%a" :clock-in :clock-resume :empty-lines 1)))
 
 
+;;for presentations
+(require 'ox-reveal)
+(setq org-reveal-root "file:///home/aidin/Documents/aur/reveal.js-master")
+(setq org-reveal-mathjax t)
 
 ;;ox-hugo
 (use-package ox-hugo
@@ -151,6 +169,24 @@ See `org-capture-templates' for more information."
         )
 
 
+;; (require 'company-posframe)
+;; (company-posframe-mode 1)
+
+
+
+(use-package company-lsp
+  :after lsp-mode
+  :config
+  (push 'company-lsp company-backends)
+;; Disable client-side cache because the LSP server does a better job.
+  (setq company-transformers nil
+        company-lsp-async t
+        company-lsp-cache-candidates nil))
+  ;; (set-company-backend! 'lsp-mode 'company-lsp)
+  ;; (setq company-lsp-enable-recompletion t))
+
+
+
 ;;auto-indent
 (use-package! aggressive-indent
    :hook ((java-mode . aggressive-indent-mode)
@@ -162,12 +198,14 @@ See `org-capture-templates' for more information."
 (setq org-startup-indented t)
 
 
-;;Re-display parts of the Emacs buffer as pretty Unicode symbols.
-(use-package pretty-mode
-    :init
-    (global-pretty-mode))
+(require 'pretty-mode)
+; if you want to set it globally
+(global-pretty-mode t)
 
-(global-prettify-symbols-mode t)
+
+(add-hook
+ 'python-mode-hook
+   (prettify-symbols-mode nil))
 
 (use-package lsp-mode
   :after lsp
@@ -185,6 +223,8 @@ See `org-capture-templates' for more information."
 (setq ranger-dont-show-binary t)
 (setq ranger-show-hidden t)
 
+;;to convert .org to .ipynb
+(require 'ox-ipynb)
 
 ;;Don’t ask before evaluating code blocks.
 (setq org-confirm-babel-evaluate nil)
@@ -196,6 +236,7 @@ See `org-capture-templates' for more information."
    (latex . t)
    (org . t)
    (dot . t)
+   (R . t)
    (python . t)
    (gnuplot . t)
    (jupyter . t)))
@@ -206,8 +247,46 @@ See `org-capture-templates' for more information."
     (:kernel . "python3")))
 
 
-;;Don’t ask before evaluating code blocks.
-(setq org-confirm-babel-evaluate nil)
+
+
+;; Polymode makes it easy to work with Rmd, Rnw, Snw
+;; format documents within Emacs
+(require 'poly-markdown)
+(require 'poly-R)
+;; MARKDOWN
+(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+;; R modes
+(add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+(add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
+
+;; archive location
+(setq org-archive-location "/home/aidin/Dropbox/orgzly/archive.org::* completed tasks")
+
+
+;; function to archive DONE subtrees
+(defun org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/DONE" 'file))
+
+
+;; set the org-src buffer size
+(setq org-src-window-setup 'current-word)
+
+;; ibuffer
+(setq ibuffer-expert t)
+(setq ibuffer-show-empty-filter-groups nil)
+(add-hook 'ibuffer-mode-hook
+	  '(lambda ()
+	     (ibuffer-auto-mode 1)
+	     (ibuffer-switch-to-saved-filter-groups "home")))
+
+
 
 ;;deft
 (use-package deft
