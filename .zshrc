@@ -97,7 +97,7 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias python='/usr/bin/python3'
+# alias python='/usr/bin/python3'
 alias root_user='sudo -s'
 alias bw_u='bw unlock --raw'
 alias l='ls -a'

@@ -89,6 +89,9 @@
 (custom-set-variables
  '(zoom-size '(0.618 . 0.618)))
 
+;; open html links in firefox
+(setq browse-url-browser-function 'browse-url-generic)
+(setq browse-url-generic-program "firefox")
 
 ;; org capture
 (require 'org-capture)
@@ -172,6 +175,9 @@ See `org-capture-templates' for more information."
 ;; (require 'company-posframe)
 ;; (company-posframe-mode 1)
 
+;; setting the width of inline images in org-mode files to a fixed value (third of the width of the screen)
+;; #+ATTR_ORG: :width 1000 will not override it.
+(setq org-image-actual-width (/ (display-pixel-width) 3))
 
 
 (use-package company-lsp
@@ -241,11 +247,14 @@ See `org-capture-templates' for more information."
    (gnuplot . t)
    (jupyter . t)))
 
+(setq org-babel-default-header-args:R
+      '((:session . "session_1")
+        (:results . "output")))
+
 (setq org-babel-default-header-args:jupyter-python
     '((:session . "py")
     (:async . "yes")
     (:kernel . "python3")))
-
 
 
 
@@ -435,8 +444,6 @@ See `org-capture-templates' for more information."
   ;;While HTML emails are undeniably sinful, we often have to read them. That’s sometimes best done in a browser. This effectively binds a h to open the current email in my default Web browser.
   (add-to-list 'mu4e-view-actions
                '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-  (setq browse-url-browser-function 'browse-url-generic)
-  (setq browse-url-generic-program "firefox")
 
 
   ;;Org integration
