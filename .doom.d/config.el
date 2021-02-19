@@ -15,21 +15,17 @@
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "SF Mono" :style "Regular" :size 16)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24)
       ;; doom-fixed-pitch-font (font-spec :family "SF Mono" :style "Regular" :size 15)
-      ;; doom-variable-pitch-font (font-spec :family "DejaVu Sans" :style "Book" :size 16))
-      doom-variable-pitch-font (font-spec :family "SF Pro Text" :style "Regular" :size 16))
-      ;; doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'light))
-
+      doom-variable-pitch-font (font-spec :family "SF Mono"  :size 16))
+      ;; doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size 15
 
 ;;(setq doom-unicode-font (font-spec :name "SF-Pro-Display-Regular" :size 15))
 
-;;(setq doom-big-font (font-spec :family "Source Code Pro" :size 32))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'modus-vivendi)
 ;; doom-nord
 ;; doom-nord-light
 ;;doom-one-light
@@ -67,36 +63,47 @@
 (use-package modus-operandi-theme
 :config
 (setq modus-operandi-theme-slanted-constructs t)
-(setq modus-operandi-theme-org-blocks 'greyscale)
+(setq modus-operandi-theme-org-blocks 'rainbow)
 (setq modus-operandi-theme-scale-headings t)
+;; (setq modus-operandi-theme-mode-line w 'borderless)
+(setq modus-operandi-theme-variable-pitch t)
 (load-theme 'modus-operandi t))
-
-;; (use-package modus-vivendi-theme
-;; :config
-;; (setq modus-vivendi-theme-slanted-constructs t)
-;; (setq modus-vivendi-theme-org-blocks 'greyscale)
-;; (setq modus-vivendi-theme-scale-headings t)
-;; (load-theme 'modus-vivendi t))
 
 
 (setq org-hide-emphasis-markers t)
 (setq org-ellipsis "⤵")
 
-;; zoom window
-(custom-set-variables
- '(zoom-mode t))
-
-(custom-set-variables
- '(zoom-size '(0.618 . 0.618)))
-
 ;; open html links in firefox
 (setq browse-url-browser-function 'browse-url-generic)
 (setq browse-url-generic-program "firefox")
 
+(use-package zoom
+  :hook (doom-first-input . zoom-mode)
+  :config
+  (setq zoom-size '(0.618 . 0.618)
+        zoom-ignored-major-modes '(dired-mode vterm-mode help-mode helpful-mode rxt-help-mode help-mode-menu org-mode)
+        zoom-ignored-buffer-names '("*doom:scratch*" "*info*" "*helpful variable: argv*")
+        zoom-ignored-buffer-name-regexps '("^\\*calc" "\\*helpful variable: .*\\*")
+        zoom-ignore-predicates (list (lambda () (> (count-lines (point-min) (point-max)) 30)))))
+
+(setq doom-modeline-height 70)
+
+
+(setq fancy-splash-image "/home/aidin/Pictures/banners/emacs.png")
+
+
+(defun evil-collection-vterm-escape-stay ()
+"Go back to normal state but don't move
+cursor backwards. Moving cursor backwards is the default vim behavior but it is
+not appropriate in some cases like terminals."
+(setq-local evil-move-cursor-back nil))
+
+(add-hook 'vterm-mode-hook #'evil-collection-vterm-escape-stay)
+
+
 ;; org capture
 (require 'org-capture)
 
-;; (setq org-agenda-files '("~/Dropbox/orgzly"))
 (setq org-agenda-files (list "~/Dropbox/orgzly"))
 
 (setq org-default-notes-file (concat org-directory "~/Documents/notes/org-capture/notes.org"))
@@ -123,9 +130,10 @@
 
 
 ;;for presentations
-(require 'ox-reveal)
-(setq org-reveal-root "file:///home/aidin/Documents/aur/reveal.js-master")
-(setq org-reveal-mathjax t)
+(require 'org-re-reveal)
+;;(require 'ox-reveal)
+(setq org-re-reveal-root "file:///home/aidin/Documents/aur/reveal.js-master")
+(setq org-re-reveal-mathjax t)
 
 ;;ox-hugo
 (use-package ox-hugo
@@ -254,7 +262,7 @@ See `org-capture-templates' for more information."
 (setq org-babel-default-header-args:jupyter-python
     '((:session . "py")
     (:async . "yes")
-    (:kernel . "python3")))
+    (:kernel . "python")))
 
 
 
@@ -318,9 +326,10 @@ See `org-capture-templates' for more information."
   (org-roam-directory "~/Documents/notes/")
   :config
   (setq org-roam-link-title-format "R:%s")
-  (setq org-roam-index-file "~/index.org")
+  (setq org-roam-index-file "~/Dropbox/roam/index.org")
   (setq org-roam-buffer-width 0.3)
-  (setq org-roam-completion-system 'default)
+  ;; (setq org-roam-completion-system 'default)
+  (setq org-roam-link-use-custom-faces t)
   (setq org-roam-capture-templates
         '(
           ("d" "default" plain (function org-roam-capture--get-point)
@@ -345,13 +354,27 @@ See `org-capture-templates' for more information."
          :map org-roam-mode-map
          (("C-c n j" . org-roam-jump-to-index))))
 
+;;elfeed
+;;functions to support syncing .elfeed between machines
+;;makes sure elfeed reads index from disk before launching
+(defun bjm/elfeed-load-db-and-open ()
+  "Wrapper to load the elfeed db from disk before opening"
+  (interactive)
+  (elfeed-db-load)
+  (elfeed)
+  (elfeed-search-update--force))
 
+(map! :leader
+      :desc "elfeed"
+      "o e" #'bjm/elfeed-load-db-and-open)
+
+(setq elfeed-db-directory "/home/aidin/Dropbox/elfeed/db/")
 
 ;; use an org file to organise feeds
-(use-package elfeed-org
+(use-package! elfeed-org
   :config
   (elfeed-org)
-  (setq rmh-elfeed-org-files (list "~/Documents/elfeed/elfeed.org")))
+  (setq rmh-elfeed-org-files (list "/home/aidin/Dropbox/elfeed/elfeed.org")))
 
 
 ;;mu4e
@@ -362,7 +385,7 @@ See `org-capture-templates' for more information."
         mu4e-drafts-folder "/[Gmail].Drafts"
         mu4e-sent-folder   "/[Gmail].Sent Mail"
         mu4e-trash-folder  "/[Gmail].Trash"
-        mu4e-refile-folder "/[Gmail].Archive"   ;; saved messages
+        mu4e-refile-folder "/[Gmail].All Mail"   ;; archive
         message-signature-file "~/.mail_signature" ; put your signature in this file
         )
 
@@ -407,7 +430,8 @@ See `org-capture-templates' for more information."
            ("/[Gmail].Sent Mail"   . ?s)
            ("/[Gmail].Trash"       . ?t)
            ("/[Gmail].Drafts"    . ?d)
-           ("/[Gmail].All Mail"   . ?a)))
+           ("/[Gmail].All Mail"    . ?a)))
+
 
   ;; show images
   ;; (setq mu4e-view-show-images t

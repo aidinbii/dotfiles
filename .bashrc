@@ -3,8 +3,8 @@
 #
 
 [[ $- != *i* ]] && return
-xmodmap -e "keycode 148=Escape"
-alias python='/usr/bin/python3'
+# xmodmap -e "keycode 148=Escape"
+alias python='/usr/bin/python'
 alias root_user='sudo -s'
 alias bw_u='bw unlock --raw'
 alias l='ls -a'

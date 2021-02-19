@@ -13,21 +13,21 @@ set $mod Mod4
 # Wallpaper
 exec_always feh --bg-scale /home/aidin/.config/i3/wallpapers/96368.jpg
 
-# Remap caps-lock to cntrl+escape
-exec_always setxkbmap -option caps:swapescape
+# Remap caps-lock to escape and vice verca
+exec_always "setxkbmap -option caps:swapescape"
+
 # Change keyboard layout
-#exec_always setxkbmap us,ru -option 'grp:alt_shift_toggle'
-exec_always "setxkbmap -layout us,ru"
-exec_always --no-startup-id "setxkbmap -option 'grp:win_space_toggle'"
+# exec_always --no-startup-id "setxkbmap  -layout us,ru -option grp:alt_shift_toggle"
+exec_always --no-startup-id "setxkbmap  -layout us,ru -option grp:shift_caps_toggle"
 
 # Rofi
 bindsym $mod+d exec --no-startup-id rofi -show drun -config ~/.config/i3/rofi/themes/default.rasi
 bindsym $mod+Tab exec --no-startup-id rofi  -show window -config ~/.config/i3/rofi/themes/Switch.rasim
-bindsym $mod+s exec --no-startup-id $HOME/.config/i3/rofi/scripts/i3stratch.py
-bindsym $mod+y exec --no-startup-id $HOME/.config/i3/rofi/scripts/Powermenu.sh
-bindsym $mod+shift+m exec --no-startup-id $HOME/.config/i3/rofi/scripts/mpdcontrol.sh
+# bindsym $mod+s exec --no-startup-id $HOME/.config/i3/rofi/scripts/i3stratch.py
+bindsym $mod+p exec --no-startup-id $HOME/.config/i3/rofi/scripts/Powermenu.sh
+# bindsym $mod+shift+m exec --no-startup-id $HOME/.config/i3/rofi/scripts/mpdcontrol.sh
 # rofi-calc - useful calc tool
-#bindsym $mod+c exec --no-startup-id "rofi -show #calc -modi calc -no-show-match -no-sort"
+bindsym $mod+c exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort -no-persist-history"
 
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
@@ -40,12 +40,12 @@ bindsym Print exec scrot '%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f ~/Pictures
 
 
 # Autostart applications
-#exec_always --no-startup-id flashfocus
-exec_always --no-startup-id bash ~/.config/i3/polybar/launchi3.sh
-#exec --no-startup-id picom --config ~/.config/i3/picom/picom.conf
-exec --no-startup-id picom -bc
-exec --no-startup-id clipit
-# exec_always --no-startup-id redshift
+# exec_always --no-startup-id flashfocus
+exec_always --no-startup-id zsh ~/.config/i3/polybar/launchi3.sh
+# exec --no-startup-id picom --config ~/.config/i3/picom/picom.conf
+# exec --no-startup-id picom -bc
+# exec --no-startup-id clipit
+exec_always --no-startup-id ~/scripts/redshift_start.sh
 # exec_always --no-startup-id dunst -config /home/aidin/.config/dunst/dunstrc
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
@@ -92,6 +92,14 @@ floating_modifier $mod
 # start a terminal
 exec yakuake
 
+# start dropbox
+exec dropbox
+
+# start ksys monitor
+exec ksysguard
+
+# start ksys monitor
+exec pulseaudio
 
 # kill focused window
 bindsym $mod+shift+q kill
@@ -156,7 +164,7 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+f floating toggle
+bindsym $mod+space floating toggle
 
 # change focus between tiling / floating windows
 #bindsym $mod+space focus mode_toggle
@@ -166,7 +174,6 @@ bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
-
 
 #navigate workspafces next / previous
 bindsym Mod1+Right workspace next
