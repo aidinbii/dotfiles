@@ -69,6 +69,8 @@
 (setq modus-operandi-theme-variable-pitch t)
 (load-theme 'modus-operandi t))
 
+;;https://www.reddit.com/r/emacs/comments/2dmv85/invalid_search_bound_wrong_side_of_point_whenever/
+(setq-default cache-long-scans nil)
 
 (setq org-hide-emphasis-markers t)
 (setq org-ellipsis "⤵")
@@ -90,6 +92,9 @@
 
 
 (setq fancy-splash-image "/home/aidin/Pictures/banners/emacs.png")
+
+
+(require 'org-inlinetask)
 
 
 (defun evil-collection-vterm-escape-stay ()
@@ -134,6 +139,11 @@ not appropriate in some cases like terminals."
 ;;(require 'ox-reveal)
 (setq org-re-reveal-root "file:///home/aidin/Documents/aur/reveal.js-master")
 (setq org-re-reveal-mathjax t)
+(setq org-re-reveal-keys '("r" "r" "f" "t"))
+;; (118 118 98 115)
+;; (setq org-export-re-reveal '("C-c C-e r" "f" "F" "t"))
+
+;; (setq org-re-reveal-export-to-html "C-c C-g")
 
 ;;ox-hugo
 (use-package ox-hugo
@@ -237,6 +247,41 @@ See `org-capture-templates' for more information."
 (setq ranger-dont-show-binary t)
 (setq ranger-show-hidden t)
 
+
+;;Lets you copy huge files and directories without Emacs freezing up and with convenient progress bar updates
+;;https://oremacs.com/2016/02/24/dired-rsync/
+(defun ora-dired-rsync (dest)
+  (interactive
+   (list
+    (expand-file-name
+     (read-file-name
+      "Rsync to:"
+      (dired-dwim-target-directory)))))
+  ;; store all selected files into "files" list
+  (let ((files (dired-get-marked-files
+                nil current-prefix-arg))
+        ;; the rsync command
+        (tmtxt/rsync-command
+         "rsync -arvz --progress "))
+    ;; add all selected file names as arguments
+    ;; to the rsync command
+    (dolist (file files)
+      (setq tmtxt/rsync-command
+            (concat tmtxt/rsync-command
+                    (shell-quote-argument file)
+                    " ")))
+    ;; append the destination
+    (setq tmtxt/rsync-command
+          (concat tmtxt/rsync-command
+                  (shell-quote-argument dest)))
+    ;; run the async shell command
+    (async-shell-command tmtxt/rsync-command "*rsync*")
+    ;; finally, switch to that window
+    (other-window 1)))
+
+(define-key dired-mode-map "Y" 'ora-dired-rsync)
+
+
 ;;to convert .org to .ipynb
 (require 'ox-ipynb)
 
@@ -268,8 +313,8 @@ See `org-capture-templates' for more information."
 
 ;; Polymode makes it easy to work with Rmd, Rnw, Snw
 ;; format documents within Emacs
-(require 'poly-markdown)
-(require 'poly-R)
+;;(require 'poly-markdown)
+;;(require 'poly-R)
 ;; MARKDOWN
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 ;; R modes
@@ -381,17 +426,17 @@ See `org-capture-templates' for more information."
 (after! mu4e
   (setq! ;mail-user-agent 'mu4e-user-agent
         mu4e-mu-binary "/usr/bin/mu"
-        mu4e-maildir (expand-file-name "~/.mail/main")
-        mu4e-drafts-folder "/[Gmail].Drafts"
-        mu4e-sent-folder   "/[Gmail].Sent Mail"
-        mu4e-trash-folder  "/[Gmail].Trash"
-        mu4e-refile-folder "/[Gmail].All Mail"   ;; archive
+        mu4e-maildir (expand-file-name "~/.mail")
+	mu4e-sent-folder "/gmail/Sent"
+        mu4e-drafts-folder "/gmail/Drafts"
+        mu4e-trash-folder  "/gmail/Trash"
+        mu4e-refile-folder "/gmail/Archive"   ;; archive
         message-signature-file "~/.mail_signature" ; put your signature in this file
         )
 
 
   ;;get mail
-  (setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/.mbsyncrc gmail"
+  (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc gmail"
         mu4e-html2text-command "w3m -dump -T text/html"
         mu4e-update-interval 300
         mu4e-headers-auto-update t
@@ -405,15 +450,17 @@ See `org-capture-templates' for more information."
 
 
   ;;smtp - for sending messages
-  (setq sendmail-program "/usr/bin/msmtp"
+  (setq ;;sendmail-program "/usr/bin/msmtp"
         send-mail-function 'smtpmail-send-it
-        message-send-mail-function 'message-send-mail-with-sendmail
+        ;;message-send-mail-function 'message-send-mail-with-sendmail
         ;;starttls-use-gnutls t
-        ;; smtpmail-starttls-credentials
+        smtpmail-starttls-credentials
         ;; '(("smtp.gmail.com" 587 nil nil))
-        ;; smtpmail-default-smtp-server "smtp.gmail.com"
-        ;; smtpmail-smtp-server "smtp.gmail.com"
-        ;; smtpmail-smtp-service 587
+        ;; (smtpmail-smtp-user     . "henrik@lissner.net")
+        (expand-file-name "~/.authinfo.gpg")
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587
         smtpmail-debug-info t)
 
   ;; Signing and Encrypting messages
@@ -426,11 +473,10 @@ See `org-capture-templates' for more information."
                                         ;(setq mu4e-compose-crypto-reply-policy 'sign-and-encrypt)
 
   (setq mu4e-maildir-shortcuts
-        '( ("/INBOX"               . ?i)
-           ("/[Gmail].Sent Mail"   . ?s)
-           ("/[Gmail].Trash"       . ?t)
-           ("/[Gmail].Drafts"    . ?d)
-           ("/[Gmail].All Mail"    . ?a)))
+        '( ("/gmail/Inbox"       . ?i)
+           ("/gmail/Trash"       . ?t)
+           ("/gmail/Drafts"      . ?d)
+           ("/gmail/Archive"     . ?a)))
 
 
   ;; show images
@@ -450,7 +496,6 @@ See `org-capture-templates' for more information."
         user-mail-address "biibosunov.aidin@gmail.com"
         user-full-name "Aidin Biibosunov")
   ;; don't save message to Sent Messages, IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete)
 
   ;; ;; spell check
   ;; (add-hook 'mu4e-compose-mode-hook

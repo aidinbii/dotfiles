@@ -29,6 +29,13 @@ bindsym $mod+p exec --no-startup-id $HOME/.config/i3/rofi/scripts/Powermenu.sh
 # rofi-calc - useful calc tool
 bindsym $mod+c exec --no-startup-id "rofi -show calc -modi calc -no-show-match -no-sort -no-persist-history"
 
+# Dual Monitors
+#exec_always xrandr --output eDP1 --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI1 #--primary --mode 1920x1080 --pos 1920x0 --rotate normal --output VIRTUAL1 --off
+#exec --no-startup-id xrandr --output HDMI1 --auto --right-of eDP1
+
+# Moving workspaces between screens
+bindsym $mod+shift+l move workspace to output left
+
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
 new_window pixel 0
@@ -98,7 +105,7 @@ exec dropbox
 # start ksys monitor
 exec ksysguard
 
-# start ksys monitor
+# start audio config
 exec pulseaudio
 
 # kill focused window
@@ -141,7 +148,7 @@ bindsym $mod+l focus right
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+#bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -190,6 +197,7 @@ set $ws6 "6:Telegram + Slack"
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
+set $ws10 "10"
 
 
 # Start applications on specific workspaces
@@ -202,8 +210,8 @@ assign [class="Emacs"] $ws3
 assign [class="zoom"] $ws5
 assign [class="TelegramDesktop"] $ws6
 assign [class="Slack"] $ws6
-assign [class="vlc"] $ws9
-assign [class="ksysguard"] $ws9
+assign [class="vlc"] $ws10
+assign [class="ksysguard"] $ws10
 
 
 
@@ -217,6 +225,7 @@ bindsym $mod+6 workspace number $ws6
 bindsym $mod+7 workspace number $ws7
 bindsym $mod+8 workspace number $ws8
 bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
 
 
 # move focused container to workspace
