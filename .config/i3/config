@@ -100,13 +100,14 @@ floating_modifier $mod
 exec yakuake
 
 # start dropbox
-exec dropbox
+#exec dropbox
+#exec --no-startup-id dropbox
 
 # start ksys monitor
 exec ksysguard
 
 # start audio config
-exec pulseaudio
+#exec pulseaudio
 
 # kill focused window
 bindsym $mod+shift+q kill

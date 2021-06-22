@@ -54,7 +54,7 @@ underline-size = 3
 underline-color=${colors.xbs}
 
 tray-maxsize = 22
-tray-padding = 6
+tray-padding = 8
 tray-position = right
 #tray-background = ${colors.xbg2}
 
