@@ -14,14 +14,15 @@
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty itself.
-#env:
+# env:
   # TERM variable
   #
   # This value is used to set the `$TERM` environment variable for
   # each instance of Alacritty. If it is not present, alacritty will
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
-  #TERM: alacritty
+  # TERM: alacritty
+      # TERM: xterm-256color
 
 #window:
   # Window dimensions (changes require restart)
@@ -75,17 +76,17 @@
   #startup_mode: Windowed
 
   # Window title
-  #title: Alacritty
+  # title: Alacritty
 
   # Allow terminal applications to change Alacritty's window title.
-  #dynamic_title: true
+dynamic_title: true
 
   # Window class (Linux/BSD only):
-  #class:
+  # class:
     # Application instance name
     #instance: Alacritty
     # General application class
-    #general: Alacritty
+    # general: Alacritty
 
   # GTK theme variant (Linux/BSD only)
   #
@@ -102,19 +103,19 @@
   #multiplier: 3
 
 # Font configuration
-#font:
+font:
   # Normal (roman) font face
-  #normal:
+  normal:
     # Font family
     #
     # Default:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    #family: monospace
+    family: 'SF Mono'
 
     # The `style` can be specified to pick a specific face.
-    #style: Regular
+    style: Regular
 
   # Bold font face
   #bold:
@@ -150,14 +151,14 @@
     #style: Bold Italic
 
   # Point size
-  #size: 11.0
+  size:  7.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
   # spacing.
-  #offset:
-  #  x: 0
-  #  y: 0
+offset:
+   x: 0
+   y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the
@@ -170,38 +171,102 @@
   #
   # Thin strokes are suitable for retina displays, but for non-retina screens
   # it is recommended to set `use_thin_strokes` to `false`.
-  #use_thin_strokes: true
+use_thin_strokes: false
 
 # If `true`, bold text is drawn using the bright color variants.
-#draw_bold_text_with_bright_colors: false
+draw_bold_text_with_bright_colors: false
 
-# Colors (Tomorrow Night)
-#colors:
+# Colors (Modus)
+schemes:
+modus-vivendi: &dark
   # Default colors
-  #primary:
-  #  background: '#1d1f21'
-  #  foreground: '#c5c8c6'
+  primary:
+    background: '#000000'
+    foreground: '#ffffff'
 
-    # Bright and dim foreground colors
-    #
-    # The dimmed foreground color is calculated automatically if it is not
-    # present. If the bright foreground color is not set, or
-    # `draw_bold_text_with_bright_colors` is `false`, the normal foreground
-    # color will be used.
-    #dim_foreground: '#828482'
-    #bright_foreground: '#eaeaea'
+  cursor:
+    text: '#000000'
+    background: '#777777'
 
-  # Cursor colors
-  #
-  # Colors which should be used to draw the terminal cursor.
-  #
-  # Allowed values are CellForeground/CellBackground, which reference the
-  # affected cell, or hexadecimal colors like #ff00ff.
-  #cursor:
-  #  text: CellBackground
-  #  cursor: CellForeground
+  # Normal colors (except green it is from intense colors)
+  normal:
+    black:   '#000000'
+    red:     '#ff8059'
+    green:   '#00fc50'
+    yellow:  '#eecc00'
+    blue:    '#29aeff'
+    magenta: '#feacd0'
+    cyan:    '#00d3d0'
+    white:   '#eeeeee'
 
-  # Vi mode cursor colors
+  # Bright colors [all the faint colors in the modus theme]
+  bright:
+    black:   '#555555'
+    red:     '#ffa0a0'
+    green:   '#88cf88'
+    yellow:  '#d2b580'
+    blue:    '#92baff'
+    magenta: '#e0b2d6'
+    cyan:    '#a0bfdf'
+    white:   '#ffffff'
+
+  # dim [all the intense colors in modus theme]
+  dim:
+    black:   '#222222'
+    red:     '#fb6859'
+    green:   '#00fc50'
+    yellow:  '#ffdd00'
+    blue:    '#00a2ff'
+    magenta: '#ff8bd4'
+    cyan:    '#30ffc0'
+    white:   '#dddddd'
+
+modus-operandi: &light
+  # Default colors
+  primary:
+    background: '#ffffff'
+    foreground: '#000000'
+
+  cursor:
+    text: '#ffffff'
+    background: '#777777'
+
+  # Normal colors (except green it is from intense colors)
+  normal:
+    black:   '#000000'
+    red:     '#a60000'
+    green:   '#006800'
+    yellow:  '#813e00'
+    blue:    '#0030a6'
+    magenta: '#721045'
+    cyan:    '#00538b'
+    white:   '#eeeeee'
+
+  # Bright colors [all the faint colors in the modus theme]
+  bright:
+    black:   '#555555'
+    red:     '#7f1010'
+    green:   '#104410'
+    yellow:  '#5f4400'
+    blue:    '#002f88'
+    magenta: '#752f50'
+    cyan:    '#12506f'
+    white:   '#ffffff'
+
+  # dim [all the intense colors in modus theme]
+  dim:
+    black:   '#222222'
+    red:     '#b60000'
+    green:   '#006800'
+    yellow:  '#904200'
+    blue:    '#1111ee'
+    magenta: '#7000e0'
+    cyan:    '#205b93'
+    white:   '#dddddd'
+
+colors: *light
+
+    # Vi mode cursor colors
   #
   # Colors for the cursor when the vi mode is active.
   #
@@ -357,7 +422,7 @@
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-#background_opacity: 1.0
+background_opacity: 1.0
 
 selection:
   # This string contains all characters that are used as separators for
@@ -367,16 +432,15 @@ selection:
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: true
 
-#cursor:
-  # Cursor style
-  #style:
+cursor:
+  style:
     # Cursor shape
     #
     # Values for `shape`:
     #   - ▇ Block
     #   - _ Underline
     #   - | Beam
-    #shape: Block
+    shape: Block
 
     # Cursor blinking state
     #
@@ -385,7 +449,7 @@ selection:
     #   - Off: Disable blinking by default
     #   - On: Enable blinking by default
     #   - Always: Force the cursor to always blink
-    #blinking: Off
+    blinking: On
 
   # Vi mode cursor style
   #
@@ -419,10 +483,10 @@ selection:
 #   - (macOS) /bin/bash --login
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
-#shell:
-#  program: /bin/bash
-#  args:
-#    - --login
+shell:
+ program: /usr/bin/zsh
+ # args:
+ #   - --login
 
 # Startup directory
 #
