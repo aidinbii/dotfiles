@@ -4,7 +4,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/aidin/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
+ #Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
@@ -110,17 +110,26 @@ setopt HIST_SAVE_NO_DUPS # Do not write a duplicat event to the history file.#
 
 
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/aidin/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/aidin/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/aidin/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/aidin/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
 
 
+export SPARK_HOME=/opt/apache-spark
+export PATH=$PATH:/opt/apache-spark/bin
+#export SCALA_HOME=/usr/local/scala/bin
+#export PYTHONPATH=$SPARK_HOME/python
 
-
-
-
-
-
-
-
-
-
-
-
+export PYSPARK_DRIVER_PYTHON="jupyter"
+export PYSPARK_DRIVER_PYTHON_OPTS="notebook"
